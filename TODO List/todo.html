@@ -29,6 +29,12 @@
 
         <script>
             
+            /*function TodoContriller($scope) {
+                $scope.saved = localStorage.getItem('todos');
+                $scope.todos = (localStorage.getItem('todos')!==null) ? JSON.parse($scope.saved)
+               // localStorage.setItem('$scope', JSON.stringify($scope.todos));
+            }*/
+
             angular.module('ToDo',[]).
             controller('todoController',['$scope',function($scope){
                 $scope.todos = [
@@ -41,11 +47,13 @@
                 $scope.addTodo = function(){
                 $scope.todos.push({'title': $scope.newTodo,'done':false});
                 $scope.newTodo = '';
+                localStorage.setItem('$scope', JSON.stringify($scope.todos));    
                 };
                 $scope.clearCompleted = function(){
                     $scope.todos = $scope.todos.filter(function(item){
                         return !item.done;
                     });
+                    localStorage.setItem('$scope', JSON.stringify($scope.todos));
                 };
                 $scope.editItem = function(todo){
                     todo.inlineEdit = true;
@@ -54,7 +62,8 @@
                     if(keyEvent==13){
                         $scope.todos[i]=todo;
                         todo.inlineEdit = false;
-                        };
+                        localStorage.setItem('$scope', JSON.stringify($scope.todos));
+                    };
                 };
             }])
         
