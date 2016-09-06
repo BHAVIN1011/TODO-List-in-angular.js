@@ -1,0 +1,91 @@
+<!doctype html>
+<html ng-app="ToDo">
+    <head>
+        <meta charset="utf-8">
+        <title> TODO app With Angularjs </title>
+        <style>
+            body {
+                    font-size: 14px;
+                    background: #eeeeee;
+                    color: #333333;
+                    width: 520px;
+                    margin: 0 auto;
+                 }
+            button{
+                      width: 13%;
+                      border: none;
+                      height: 13%;
+                      background: #13756D;
+                      font-size: 11px;
+                      font-family: megrim, fantasy;
+                      color: #aaa;
+                    }
+            
+            .done{text-decoration: line-through;color: #ccc;}
+        </style>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+        <!--<script src="https://code.angularjs.org/1.4.5/angular-route.js"></script>-->   
+
+        <script>
+            
+            /*function TodoContriller($scope) {
+                $scope.saved = localStorage.getItem('todos');
+                $scope.todos = (localStorage.getItem('todos')!==null) ? JSON.parse($scope.saved)
+               // localStorage.setItem('$scope', JSON.stringify($scope.todos));
+            }*/
+
+            angular.module('ToDo',[]).
+            controller('todoController',['$scope',function($scope){
+                $scope.todos = [
+                    {'title':'Build a todo list','done': false}
+                ];
+                
+                
+                
+            
+                $scope.addTodo = function(){
+                $scope.todos.push({'title': $scope.newTodo,'done':false});
+                $scope.newTodo = '';
+                localStorage.setItem('$scope', JSON.stringify($scope.todos));    
+                };
+                $scope.clearCompleted = function(){
+                    $scope.todos = $scope.todos.filter(function(item){
+                        return !item.done;
+                    });
+                    localStorage.setItem('$scope', JSON.stringify($scope.todos));
+                };
+                $scope.editItem = function(todo){
+                    todo.inlineEdit = true;
+                };
+                $scope.myFunct = function(keyEvent,i,todo){
+                    if(keyEvent==13){
+                        $scope.todos[i]=todo;
+                        todo.inlineEdit = false;
+                        localStorage.setItem('$scope', JSON.stringify($scope.todos));
+                    };
+                };
+            }])
+        
+        
+        </script>
+    </head>
+    <body>
+        <div ng-controller = "todoController">
+            <form name="frm" ng-submit="addTodo()">
+            <input type="text" name="newtodo" ng-model="newTodo" placeholder="Enter text here" required />
+                <button ng-disable="frm.$invalid">GO</button>
+            </form>
+            <br>
+            <button ng-click="clearCompleted()">Clear Completed</button>
+            <ol>
+                <li ng-repeat="todo in todos">
+                    <input type="checkbox" ng-model="todo.done" />
+                    <span ng-class="{'done': todo.done}" ng-hide="todo.inlineEdit" ng-dblclick="editItem(todo)">{{todo.title}}</span>
+                    <input type="text" ng-show="todo.inlineEdit" ng-model="todo.title" ng-keypress="myFunct($event,$index,todo)" />
+                </li>
+            </ol>
+        </div>
+        
+    </body>
+</html>
